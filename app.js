@@ -1,7 +1,7 @@
 'use strict';
 
 const API = 'https://api.scryfall.com';
-const CARDS_KEY = 'mesao:cards:v1';
+const CARDS_KEY = 'mesao:cards:v2';
 const SYM_KEY = 'mesao:symbology:v1';
 const CARDS_TTL = 24 * 3600 * 1000;
 const SYM_TTL = 30 * 24 * 3600 * 1000;
@@ -89,6 +89,7 @@ function viewModel(card) {
   const firstType = card.type_line || (card.card_faces ? card.card_faces[0].type_line : '');
   return {
     name: card.name,
+    displayName: card.card_faces ? card.card_faces[0].name : card.name,
     type_line: card.type_line || (card.card_faces ? card.card_faces.map((f) => f.type_line).join(' // ') : ''),
     oracle_text: card.oracle_text || (card.card_faces ? card.card_faces.map((f) => f.oracle_text).filter(Boolean).join('\n\n') : ''),
     mana_cost: card.mana_cost || (card.card_faces ? card.card_faces[0].mana_cost : '') || '',
@@ -199,8 +200,8 @@ function showSkeleton(n) {
 
 function cardHTML(c) {
   return `<button class="card" type="button" data-id="${c.id}">
-    <img class="card-img" src="${c.small}" alt="${escapeHtml(c.name)}" loading="lazy">
-    <span class="card-name">${escapeHtml(c.name)}</span>
+    <img class="card-img" src="${c.small}" alt="${escapeHtml(c.displayName)}" loading="lazy">
+    <span class="card-name">${escapeHtml(c.displayName)}</span>
   </button>`;
 }
 
