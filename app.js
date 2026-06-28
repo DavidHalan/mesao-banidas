@@ -1,7 +1,7 @@
 'use strict';
 
 const API = 'https://api.scryfall.com';
-const CARDS_KEY = 'mesao:cards:v2';
+const CARDS_KEY = 'mesao:cards:v3';
 const SYM_KEY = 'mesao:symbology:v1';
 const CARDS_TTL = 24 * 3600 * 1000;
 const SYM_TTL = 30 * 24 * 3600 * 1000;
@@ -17,7 +17,7 @@ const TYPE_ORDER = [
 ];
 const SECTIONS = [...TYPE_ORDER.map((t) => t[1]), 'Outros'];
 
-const state = { cards: [], group: 'type', sort: 'name', query: '' };
+const state = { cards: [], group: 'type', sort: 'name', query: '', colors: new Set() };
 const $ = (sel) => document.querySelector(sel);
 let SYM = {};
 
@@ -100,6 +100,7 @@ function viewModel(card) {
     cn: card.collector_number || '',
     artist: card.artist || '',
     cmc: card.cmc || 0,
+    ci: (card.color_identity || []).slice().sort(),
     image: front.normal || '',
     small: front.small || front.normal || '',
     faces,
@@ -217,6 +218,7 @@ function render() {
   let items = state.cards.slice();
   const q = norm(state.query.trim());
   if (q) items = items.filter((c) => norm(c.name).includes(q));
+  if (state.colors.size) items = items.filter((c) => c.ci.length === state.colors.size && c.ci.every((x) => state.colors.has(x)));
   items.sort((a, b) =>
     state.sort === 'mv' ? a.cmc - b.cmc || a.name.localeCompare(b.name) : a.name.localeCompare(b.name)
   );
@@ -225,7 +227,7 @@ function render() {
   $('#count').textContent = n + (n === 1 ? ' carta' : ' cartas');
 
   if (!n) {
-    root.innerHTML = '<p class="empty">Nenhuma carta com esse nome. Limpe a busca para ver todas.</p>';
+    root.innerHTML = '<p class="empty">Nenhuma carta com esses filtros. Ajuste a busca ou as cores.</p>';
     return;
   }
 
@@ -283,6 +285,15 @@ function setupControls() {
   $('#search').addEventListener('input', (e) => { state.query = e.target.value; render(); });
   $('#group').addEventListener('change', (e) => { state.group = e.target.value; render(); });
   $('#sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); });
+  $('#colors').addEventListener('click', (e) => {
+    const pip = e.target.closest('.pip');
+    if (!pip) return;
+    const c = pip.dataset.color;
+    const on = !state.colors.has(c);
+    on ? state.colors.add(c) : state.colors.delete(c);
+    pip.setAttribute('aria-pressed', String(on));
+    render();
+  });
   $('#gallery').addEventListener('click', (e) => {
     const btn = e.target.closest('.card');
     if (btn && btn.dataset.id) window.openCard(Number(btn.dataset.id));

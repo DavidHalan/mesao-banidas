@@ -71,6 +71,15 @@ select {
 select:hover { border-color: var(--border-strong); }
 select:focus-visible { outline: none; border-color: var(--focus); }
 
+.colors { display: flex; gap: 8px; height: 44px; align-items: center; }
+.pip { width: 34px; height: 34px; flex: none; padding: 0; display: grid; place-items: center; background: var(--surface-1); border: 1px solid var(--border); border-radius: 50%; cursor: pointer; transition: border-color 0.15s var(--ease), background 0.15s var(--ease); }
+.pip img { width: 20px; height: 20px; display: block; filter: grayscale(1) opacity(0.45); transition: filter 0.15s var(--ease); }
+.pip:hover { border-color: var(--border-strong); }
+.pip:hover img { filter: grayscale(1) opacity(0.75); }
+.pip:focus-visible { outline: none; border-color: var(--focus); }
+.pip[aria-pressed="true"] { background: var(--surface-2); border-color: var(--border-strong); }
+.pip[aria-pressed="true"] img { filter: none; }
+
 .section { margin: 40px 0; }
 .section-head { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
 .section-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex: none; }
