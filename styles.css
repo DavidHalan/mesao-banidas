@@ -219,6 +219,7 @@ select:focus-visible { outline: none; border-color: var(--focus); }
   transition: color 0.15s, border-color 0.15s;
 }
 .flip:hover { color: var(--text); border-color: var(--border-strong); }
+.flip[hidden] { display: none; }
 .dialog-info { min-width: 0; padding-right: 28px; }
 .dlg-name { font-size: 17px; font-weight: 650; letter-spacing: -0.01em; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
 .dlg-type { margin: 4px 0 12px; padding-bottom: 12px; font-size: 13px; color: var(--text-2); border-bottom: 1px solid var(--border); }
