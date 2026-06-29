@@ -4,6 +4,10 @@
     {
       "titulo": "Regra Geral",
       "texto": "Se usar carta banida ou tiver no deck, perde 1/3 da vida por acontecimento."
+    },
+    {
+      "titulo": "Destruição de Terrenos",
+      "texto": "Estão proibidas todas as cartas que resultem na destruição, exílio ou sacrifício global de terrenos (efeitos de Mass Land Destruction). Mesmo não estando listada na lista de banidas."
     }
   ],
   "cartas": [
@@ -88,6 +92,14 @@
     "Serra's Sanctum",
     "The Tabernacle at Pendrell Vale",
     "Tolarian Academy",
-    "Karakas"
+    "Karakas",
+    "Catastrophe",
+    "Decree of Annihilation",
+    "Jokulhaups",
+    "Obliterate",
+    "Ravages of War",
+    "Boom",
+    "Ruination",
+    "From the Ashes"
   ]
 }
