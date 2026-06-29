@@ -14,7 +14,7 @@ Os jogadores da mesa (4 a 8 amigos). Conhecem Magic, usam Moxfield/Archidekt, le
 
 - Nome da mesa: "Mesão" (provisório, trocável em `dados.json`).
 - Tom: direto e sem cerimônia, como a galera fala. Português do Brasil.
-- Identidade visual: lista negra. O vermelho marca "proibido"; o resto é escuro e sóbrio para a imagem da carta dominar.
+- Identidade visual: lista negra. Canvas escuro carvão, tipografia gravada (Cinzel) dá o sabor MTG, o vermelho marca "proibido". As cinco cores (WUBRG) aparecem só onde codificam dado da carta. A imagem da carta domina.
 
 ## Strategic principles
 
@@ -24,5 +24,5 @@ Os jogadores da mesa (4 a 8 amigos). Conhecem Magic, usam Moxfield/Archidekt, le
 
 ## Anti-references
 
-- Visual "gamer" genérico: neon sobre preto, dramaticidade RGB.
+- Visual "gamer" genérico: neon/glow, dramaticidade RGB decorativa. As cinco cores entram só presas a significado (filtro, agrupar por cor), nunca como enfeite.
 - Ferramenta de deckbuilding cheia de estatística (preço, EDHREC rank, inclusão). Aqui é só banlist + regra.

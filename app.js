@@ -17,7 +17,21 @@ const TYPE_ORDER = [
 ];
 const SECTIONS = [...TYPE_ORDER.map((t) => t[1]), 'Outros'];
 
-const state = { cards: [], group: 'type', sort: 'name', query: '', colors: new Set() };
+const COLOR_PT = { W: 'Branco', U: 'Azul', B: 'Preto', R: 'Vermelho', G: 'Verde' };
+const COLOR_SECTIONS = ['Branco', 'Azul', 'Preto', 'Vermelho', 'Verde', 'Multicolor', 'Incolor'];
+const SECTION_DOT = {
+  Branco: 'var(--c-w)', Azul: 'var(--c-u)', Preto: 'var(--c-b)', Vermelho: 'var(--c-r)', Verde: 'var(--c-g)',
+  Multicolor: 'linear-gradient(90deg,var(--c-w),var(--c-u),var(--c-b),var(--c-r),var(--c-g))',
+  Incolor: 'var(--c-c)',
+};
+
+function colorBucket(c) {
+  if (!c.ci.length) return 'Incolor';
+  if (c.ci.length === 1) return COLOR_PT[c.ci[0]];
+  return 'Multicolor';
+}
+
+const state = { cards: [], group: 'type', sort: 'name', query: '', colors: new Set(), colorMode: 'including' };
 const $ = (sel) => document.querySelector(sel);
 let SYM = {};
 
@@ -195,20 +209,24 @@ function showError(msg) {
 function showSkeleton(n) {
   $('#gallery').innerHTML =
     '<div class="grid skeleton">' +
-    Array.from({ length: n }, () => '<div class="card"><div class="card-img"></div></div>').join('') +
+    Array.from({ length: n }, () => '<div class="card"><div class="card-frame"><div class="card-img"></div></div></div>').join('') +
     '</div>';
 }
 
 function cardHTML(c) {
+  const mana = manaHTML(c.mana_cost);
   return `<button class="card" type="button" data-id="${c.id}">
-    <img class="card-img" src="${c.small}" alt="${escapeHtml(c.displayName)}" loading="lazy">
+    <span class="card-frame">
+      <img class="card-img" src="${c.small}" alt="${escapeHtml(c.displayName)}" loading="lazy">
+      ${mana ? `<span class="card-mana">${mana}</span>` : ''}
+    </span>
     <span class="card-name">${escapeHtml(c.displayName)}</span>
   </button>`;
 }
 
-function sectionHTML(label, arr) {
+function sectionHTML(label, arr, dot) {
   const head = label
-    ? `<div class="section-head"><span class="section-dot"></span><span class="section-name">${escapeHtml(label)}</span><span class="section-count">${arr.length}</span></div>`
+    ? `<div class="section-head"><span class="section-dot" style="background:${dot || 'var(--accent)'}"></span><span class="section-name">${escapeHtml(label)}</span><span class="section-count">${arr.length}</span></div>`
     : '';
   return `<section class="section">${head}<div class="grid">${arr.map(cardHTML).join('')}</div></section>`;
 }
@@ -218,7 +236,17 @@ function render() {
   let items = state.cards.slice();
   const q = norm(state.query.trim());
   if (q) items = items.filter((c) => norm(c.name).includes(q));
-  if (state.colors.size) items = items.filter((c) => [...state.colors].every((x) => c.ci.includes(x)));
+  if (state.colors.size) {
+    const sel = [...state.colors];
+    const m = state.colorMode;
+    items = items.filter((c) =>
+      m === 'exact'
+        ? c.ci.length === sel.length && sel.every((x) => c.ci.includes(x))
+        : m === 'atmost'
+        ? c.ci.every((x) => state.colors.has(x))
+        : sel.every((x) => c.ci.includes(x))
+    );
+  }
   items.sort((a, b) =>
     state.sort === 'mv' ? a.cmc - b.cmc || a.name.localeCompare(b.name) : a.name.localeCompare(b.name)
   );
@@ -237,10 +265,14 @@ function render() {
   } else if (state.group === 'mv') {
     const keys = [...new Set(items.map((c) => c.cmc))].sort((a, b) => a - b);
     groups = keys.map((k) => ['Custo de mana ' + k, items.filter((c) => c.cmc === k)]);
+  } else if (state.group === 'color') {
+    groups = COLOR_SECTIONS.map((s) => [s, items.filter((c) => colorBucket(c) === s)]).filter((g) => g[1].length);
   } else {
     groups = SECTIONS.map((s) => [s, items.filter((c) => c.bucket === s)]).filter((g) => g[1].length);
   }
-  root.innerHTML = groups.map(([label, arr]) => sectionHTML(label, arr)).join('');
+  root.innerHTML = groups
+    .map(([label, arr]) => sectionHTML(label, arr, state.group === 'color' ? SECTION_DOT[label] : undefined))
+    .join('');
 }
 
 function setupDialog() {
@@ -285,6 +317,7 @@ function setupControls() {
   $('#search').addEventListener('input', (e) => { state.query = e.target.value; render(); });
   $('#group').addEventListener('change', (e) => { state.group = e.target.value; render(); });
   $('#sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); });
+  $('#color-mode').addEventListener('change', (e) => { state.colorMode = e.target.value; render(); });
   $('#colors').addEventListener('click', (e) => {
     const pip = e.target.closest('.pip');
     if (!pip) return;

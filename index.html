@@ -8,66 +8,84 @@
   <link rel="preconnect" href="https://api.scryfall.com">
   <link rel="preconnect" href="https://cards.scryfall.io">
   <link rel="preconnect" href="https://svgs.scryfall.io">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
+  <header class="hero">
+    <p class="hero-kicker">
       <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <circle cx="12" cy="12" r="9"></circle><path d="M5.6 5.6l12.8 12.8"></path>
         </svg>
       </span>
-      <span class="brand-text">
-        <span class="brand-name" id="brand-name">Mesão</span>
-        <span class="brand-sub">Lista negra da mesa</span>
-      </span>
-    </div>
-    <span class="count" id="count" aria-live="polite"></span>
+      <span id="brand-name">Mesão</span><span class="hero-sep" aria-hidden="true">·</span><span>Commander</span>
+    </p>
+    <h1 class="hero-title">Proibidas</h1>
+    <p class="hero-sub">A lista negra da mesa. <span class="count" id="count" aria-live="polite"></span></p>
   </header>
 
   <main>
-    <section class="rules" id="rules" aria-labelledby="rules-title">
-      <h2 class="rules-title" id="rules-title">Regras da mesa</h2>
-      <div class="rules-body" id="rules-body"></div>
+    <section class="decree" id="rules" aria-labelledby="rules-title">
+      <span class="seal" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="9"></circle><path d="M5.6 5.6l12.8 12.8"></path>
+        </svg>
+      </span>
+      <div class="decree-body">
+        <h2 class="rules-title" id="rules-title">Regras da mesa</h2>
+        <div class="rules-body" id="rules-body"></div>
+      </div>
     </section>
 
-    <div class="controls" role="search">
-      <label class="field search">
-        <svg class="field-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
-        </svg>
-        <input type="search" id="search" placeholder="Buscar carta" autocomplete="off" aria-label="Buscar carta pelo nome">
-      </label>
-      <label class="field">
-        <span class="field-label">Agrupar</span>
-        <select id="group">
-          <option value="type">Tipo</option>
-          <option value="mv">Custo de mana</option>
-          <option value="ungrouped">Sem grupo</option>
-        </select>
-      </label>
-      <label class="field">
-        <span class="field-label">Ordenar</span>
-        <select id="sort">
-          <option value="name">Nome</option>
-          <option value="mv">Custo de mana</option>
-        </select>
-      </label>
-      <div class="field">
-        <span class="field-label">Incluindo estas cores</span>
-        <div class="colors" id="colors" role="group" aria-label="Filtrar cartas que incluem estas cores">
-          <button class="pip" type="button" data-color="W" aria-pressed="false" title="Branco"><img src="https://svgs.scryfall.io/card-symbols/W.svg" alt="Branco" width="20" height="20"></button>
-          <button class="pip" type="button" data-color="U" aria-pressed="false" title="Azul"><img src="https://svgs.scryfall.io/card-symbols/U.svg" alt="Azul" width="20" height="20"></button>
-          <button class="pip" type="button" data-color="B" aria-pressed="false" title="Preto"><img src="https://svgs.scryfall.io/card-symbols/B.svg" alt="Preto" width="20" height="20"></button>
-          <button class="pip" type="button" data-color="R" aria-pressed="false" title="Vermelho"><img src="https://svgs.scryfall.io/card-symbols/R.svg" alt="Vermelho" width="20" height="20"></button>
-          <button class="pip" type="button" data-color="G" aria-pressed="false" title="Verde"><img src="https://svgs.scryfall.io/card-symbols/G.svg" alt="Verde" width="20" height="20"></button>
+    <div class="workspace">
+      <aside class="rail" role="search">
+        <label class="field search">
+          <svg class="field-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path>
+          </svg>
+          <input type="search" id="search" placeholder="Buscar carta" autocomplete="off" aria-label="Buscar carta pelo nome">
+        </label>
+        <label class="field">
+          <span class="field-label">Agrupar</span>
+          <select id="group">
+            <option value="type">Tipo</option>
+            <option value="color">Cor</option>
+            <option value="mv">Custo de mana</option>
+            <option value="ungrouped">Sem grupo</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">Ordenar</span>
+          <select id="sort">
+            <option value="name">Nome</option>
+            <option value="mv">Custo de mana</option>
+          </select>
+        </label>
+        <div class="field">
+          <span class="field-label">Cores</span>
+          <div class="colors" id="colors" role="group" aria-label="Filtrar por cor">
+            <button class="pip" type="button" data-color="W" aria-pressed="false" title="Branco"><img src="https://svgs.scryfall.io/card-symbols/W.svg" alt="Branco" width="20" height="20"></button>
+            <button class="pip" type="button" data-color="U" aria-pressed="false" title="Azul"><img src="https://svgs.scryfall.io/card-symbols/U.svg" alt="Azul" width="20" height="20"></button>
+            <button class="pip" type="button" data-color="B" aria-pressed="false" title="Preto"><img src="https://svgs.scryfall.io/card-symbols/B.svg" alt="Preto" width="20" height="20"></button>
+            <button class="pip" type="button" data-color="R" aria-pressed="false" title="Vermelho"><img src="https://svgs.scryfall.io/card-symbols/R.svg" alt="Vermelho" width="20" height="20"></button>
+            <button class="pip" type="button" data-color="G" aria-pressed="false" title="Verde"><img src="https://svgs.scryfall.io/card-symbols/G.svg" alt="Verde" width="20" height="20"></button>
+          </div>
+          <select id="color-mode" aria-label="Modo do filtro de cor">
+            <option value="exact">Exatamente estas cores</option>
+            <option value="including" selected>Incluindo estas cores</option>
+            <option value="atmost">No máximo estas cores</option>
+          </select>
         </div>
+      </aside>
+
+      <div class="gallery-col">
+        <div class="notice" id="notice" hidden></div>
+        <div id="gallery" aria-live="polite"></div>
       </div>
     </div>
-
-    <div class="notice" id="notice" hidden></div>
-    <div id="gallery" aria-live="polite"></div>
   </main>
 
   <footer class="site-foot">
