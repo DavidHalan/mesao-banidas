@@ -218,7 +218,7 @@ function render() {
   let items = state.cards.slice();
   const q = norm(state.query.trim());
   if (q) items = items.filter((c) => norm(c.name).includes(q));
-  if (state.colors.size) items = items.filter((c) => c.ci.length === state.colors.size && c.ci.every((x) => state.colors.has(x)));
+  if (state.colors.size) items = items.filter((c) => [...state.colors].every((x) => c.ci.includes(x)));
   items.sort((a, b) =>
     state.sort === 'mv' ? a.cmc - b.cmc || a.name.localeCompare(b.name) : a.name.localeCompare(b.name)
   );
